@@ -47,7 +47,7 @@ export interface IStorage {
   deleteTask(id: number): Promise<boolean>;
   
   // Session store
-  sessionStore: session.SessionStore;
+  sessionStore: any; // Using any because of type issues with memorystore
 }
 
 export class MemStorage implements IStorage {
@@ -57,7 +57,7 @@ export class MemStorage implements IStorage {
   private products: Map<number, Product>;
   private tasks: Map<number, Task>;
   
-  sessionStore: session.SessionStore;
+  sessionStore: any; // Using any for session store type issues
   
   private userIdCounter: number;
   private customerIdCounter: number;
@@ -100,10 +100,14 @@ export class MemStorage implements IStorage {
     const webLink = userData.webLink || this.generateWebLink(userData.companyName);
     
     const user: User = { 
-      ...userData, 
-      id, 
-      createdAt,
-      webLink
+      id,
+      username: userData.username, 
+      password: userData.password,
+      companyName: userData.companyName,
+      businessType: userData.businessType || null,
+      webLink: webLink || null,
+      logo: userData.logo || null,
+      createdAt
     };
     
     this.users.set(id, user);
@@ -134,7 +138,16 @@ export class MemStorage implements IStorage {
     const id = this.customerIdCounter++;
     const createdAt = new Date();
     
-    const customer: Customer = { ...customerData, id, createdAt };
+    const customer: Customer = { 
+      id, 
+      userId: customerData.userId,
+      name: customerData.name,
+      email: customerData.email || null,
+      phone: customerData.phone || null,
+      address: customerData.address || null,
+      notes: customerData.notes || null,
+      createdAt: createdAt
+    };
     this.customers.set(id, customer);
     return customer;
   }
@@ -166,7 +179,16 @@ export class MemStorage implements IStorage {
   async createEmployee(employeeData: InsertEmployee): Promise<Employee> {
     const id = this.employeeIdCounter++;
     
-    const employee: Employee = { ...employeeData, id };
+    const employee: Employee = { 
+      id,
+      userId: employeeData.userId,
+      name: employeeData.name,
+      email: employeeData.email || null,
+      phone: employeeData.phone || null,
+      position: employeeData.position || null,
+      startDate: employeeData.startDate || null,
+      status: employeeData.status || null
+    };
     this.employees.set(id, employee);
     return employee;
   }
@@ -198,7 +220,17 @@ export class MemStorage implements IStorage {
   async createProduct(productData: InsertProduct): Promise<Product> {
     const id = this.productIdCounter++;
     
-    const product: Product = { ...productData, id };
+    const product: Product = { 
+      id,
+      userId: productData.userId,
+      name: productData.name,
+      description: productData.description || null,
+      price: productData.price || null,
+      category: productData.category || null,
+      inventory: productData.inventory || null,
+      image: productData.image || null,
+      isPublished: productData.isPublished || null
+    };
     this.products.set(id, product);
     return product;
   }
@@ -230,7 +262,17 @@ export class MemStorage implements IStorage {
   async createTask(taskData: InsertTask): Promise<Task> {
     const id = this.taskIdCounter++;
     
-    const task: Task = { ...taskData, id };
+    const task: Task = { 
+      id,
+      userId: taskData.userId,
+      title: taskData.title,
+      description: taskData.description || null,
+      dueDate: taskData.dueDate || null,
+      status: taskData.status || null,
+      priority: taskData.priority || null,
+      assignedTo: taskData.assignedTo || null,
+      category: taskData.category || null
+    };
     this.tasks.set(id, task);
     return task;
   }
