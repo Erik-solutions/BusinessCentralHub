@@ -137,7 +137,7 @@ export class DatabaseStorage {
     const result = await db
       .delete(employees)
       .where(eq(employees.id, id));
-    return result.rowCount > 0;
+    return result.rowCount !== null && result.rowCount > 0;
   }
   
   // Product methods
@@ -171,7 +171,7 @@ export class DatabaseStorage {
     const result = await db
       .delete(products)
       .where(eq(products.id, id));
-    return result.rowCount > 0;
+    return result.rowCount !== null && result.rowCount > 0;
   }
   
   // Task methods
@@ -219,7 +219,7 @@ export class DatabaseStorage {
     const result = await db
       .delete(tasks)
       .where(eq(tasks.id, id));
-    return result.rowCount > 0;
+    return result.rowCount !== null && result.rowCount > 0;
   }
   
   // Complaint methods
@@ -259,7 +259,7 @@ export class DatabaseStorage {
     const result = await db
       .delete(complaints)
       .where(eq(complaints.id, id));
-    return result.rowCount > 0;
+    return result.rowCount !== null && result.rowCount > 0;
   }
   
   // Department methods
@@ -293,7 +293,7 @@ export class DatabaseStorage {
     const result = await db
       .delete(departments)
       .where(eq(departments.id, id));
-    return result.rowCount > 0;
+    return result.rowCount !== null && result.rowCount > 0;
   }
   
   // Team methods
@@ -333,7 +333,7 @@ export class DatabaseStorage {
     const result = await db
       .delete(teams)
       .where(eq(teams.id, id));
-    return result.rowCount > 0;
+    return result.rowCount !== null && result.rowCount > 0;
   }
   
   // Team member methods
@@ -367,7 +367,7 @@ export class DatabaseStorage {
     const result = await db
       .delete(teamMembers)
       .where(eq(teamMembers.id, id));
-    return result.rowCount > 0;
+    return result.rowCount !== null && result.rowCount > 0;
   }
   
   // Financial record methods
@@ -407,7 +407,7 @@ export class DatabaseStorage {
     const result = await db
       .delete(financialRecords)
       .where(eq(financialRecords.id, id));
-    return result.rowCount > 0;
+    return result.rowCount !== null && result.rowCount > 0;
   }
   
   // Budget methods
@@ -451,7 +451,7 @@ export class DatabaseStorage {
     const result = await db
       .delete(budgets)
       .where(eq(budgets.id, id));
-    return result.rowCount > 0;
+    return result.rowCount !== null && result.rowCount > 0;
   }
   
   // Project methods
@@ -491,7 +491,7 @@ export class DatabaseStorage {
     const result = await db
       .delete(projects)
       .where(eq(projects.id, id));
-    return result.rowCount > 0;
+    return result.rowCount !== null && result.rowCount > 0;
   }
   
   // Meeting methods
@@ -535,7 +535,7 @@ export class DatabaseStorage {
     const result = await db
       .delete(meetings)
       .where(eq(meetings.id, id));
-    return result.rowCount > 0;
+    return result.rowCount !== null && result.rowCount > 0;
   }
   
   // Top performing employees and products
