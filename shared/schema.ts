@@ -1,7 +1,9 @@
+// Database schema definitions using Drizzle ORM
 import { pgTable, text, serial, integer, boolean, timestamp, json, decimal } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// User table schema - stores core user account information
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
@@ -16,6 +18,7 @@ export const users = pgTable("users", {
   location: text("location"),
 });
 
+// Customer/supplier management table
 export const customers = pgTable("customers", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").references(() => users.id).notNull(),
@@ -25,13 +28,14 @@ export const customers = pgTable("customers", {
   address: text("address"),
   createdAt: timestamp("created_at").defaultNow(),
   notes: text("notes"),
-  type: text("type").default("customer"), // customer or supplier
+  type: text("type").default("customer"), // Distinguishes between customers and suppliers
   totalSales: decimal("total_sales").default("0"),
   totalPurchases: decimal("total_purchases").default("0"),
   complaintCount: integer("complaint_count").default(0),
   customerSatisfaction: integer("customer_satisfaction").default(0), // 0-100
 });
 
+// Complaint management table
 export const complaints = pgTable("complaints", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").references(() => users.id).notNull(),
@@ -47,6 +51,7 @@ export const complaints = pgTable("complaints", {
   resolution: text("resolution"),
 });
 
+// Department management table
 export const departments = pgTable("departments", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").references(() => users.id).notNull(),
@@ -60,6 +65,7 @@ export const departments = pgTable("departments", {
   headcount: integer("headcount"),
 });
 
+// Employee management table
 export const employees = pgTable("employees", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").references(() => users.id).notNull(),
@@ -77,6 +83,7 @@ export const employees = pgTable("employees", {
   tasksAssigned: integer("tasks_assigned").default(0),
 });
 
+// Team management table
 export const teams = pgTable("teams", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").references(() => users.id).notNull(),
@@ -89,6 +96,7 @@ export const teams = pgTable("teams", {
   status: text("status").default("active"),
 });
 
+// Team member association table
 export const teamMembers = pgTable("team_members", {
   id: serial("id").primaryKey(),
   teamId: integer("team_id").references(() => teams.id).notNull(),
@@ -99,6 +107,7 @@ export const teamMembers = pgTable("team_members", {
   permissions: json("permissions"),
 });
 
+// Product catalog table
 export const products = pgTable("products", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").references(() => users.id).notNull(),
@@ -117,6 +126,7 @@ export const products = pgTable("products", {
   socialMediaLinks: json("social_media_links").default({}),
 });
 
+// Financial record tracking table
 export const financialRecords = pgTable("financial_records", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").references(() => users.id).notNull(),
@@ -131,6 +141,7 @@ export const financialRecords = pgTable("financial_records", {
   reference: text("reference"),
 });
 
+// Budget management table
 export const budgets = pgTable("budgets", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").references(() => users.id).notNull(),
@@ -144,6 +155,7 @@ export const budgets = pgTable("budgets", {
   actualSpend: decimal("actual_spend").default("0"),
 });
 
+// Project management table
 export const projects = pgTable("projects", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").references(() => users.id).notNull(),
@@ -157,6 +169,7 @@ export const projects = pgTable("projects", {
   progress: integer("progress").default(0), // 0-100
 });
 
+// Meeting scheduling and management table
 export const meetings = pgTable("meetings", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").references(() => users.id).notNull(),
@@ -170,6 +183,7 @@ export const meetings = pgTable("meetings", {
   notes: text("notes"),
 });
 
+// Task management table
 export const tasks = pgTable("tasks", {
   id: serial("id").primaryKey(),
   userId: integer("user_id").references(() => users.id).notNull(),
@@ -187,6 +201,59 @@ export const tasks = pgTable("tasks", {
   startDate: timestamp("start_date"),
   completedDate: timestamp("completed_date"),
 });
+
+// Define types for all schemas
+// User schema types
+export type InsertUser = z.infer<typeof insertUserSchema>;
+export type User = typeof users.$inferSelect;
+
+// Customer schema types
+export type InsertCustomer = z.infer<typeof insertCustomerSchema>;
+export type Customer = typeof customers.$inferSelect;
+
+// Complaint schema types
+export type InsertComplaint = z.infer<typeof insertComplaintSchema>;
+export type Complaint = typeof complaints.$inferSelect;
+
+// Department schema types
+export type InsertDepartment = z.infer<typeof insertDepartmentSchema>;
+export type Department = typeof departments.$inferSelect;
+
+// Employee schema types
+export type InsertEmployee = z.infer<typeof insertEmployeeSchema>;
+export type Employee = typeof employees.$inferSelect;
+
+// Team schema types
+export type InsertTeam = z.infer<typeof insertTeamSchema>;
+export type Team = typeof teams.$inferSelect;
+
+// Team Member schema types
+export type InsertTeamMember = z.infer<typeof insertTeamMemberSchema>;
+export type TeamMember = typeof teamMembers.$inferSelect;
+
+// Product schema types
+export type InsertProduct = z.infer<typeof insertProductSchema>;
+export type Product = typeof products.$inferSelect;
+
+// Financial Record schema types
+export type InsertFinancialRecord = z.infer<typeof insertFinancialRecordSchema>;
+export type FinancialRecord = typeof financialRecords.$inferSelect;
+
+// Budget schema types
+export type InsertBudget = z.infer<typeof insertBudgetSchema>;
+export type Budget = typeof budgets.$inferSelect;
+
+// Project schema types
+export type InsertProject = z.infer<typeof insertProjectSchema>;
+export type Project = typeof projects.$inferSelect;
+
+// Meeting schema types
+export type InsertMeeting = z.infer<typeof insertMeetingSchema>;
+export type Meeting = typeof meetings.$inferSelect;
+
+// Task schema types
+export type InsertTask = z.infer<typeof insertTaskSchema>;
+export type Task = typeof tasks.$inferSelect;
 
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
@@ -235,8 +302,7 @@ export const insertDepartmentSchema = createInsertSchema(departments).pick({
   budget: true,
   goals: true,
   headcount: true,
-})
-.extend({
+}).extend({
   managerId: z.number().optional(),
 });
 
@@ -289,8 +355,7 @@ export const insertProductSchema = createInsertSchema(products).pick({
   socialMediaLinks: true,
   sales: true,
   revenue: true,
-})
-.extend({
+}).extend({
   popularity: z.number().optional(),
 });
 
@@ -305,8 +370,7 @@ export const insertFinancialRecordSchema = createInsertSchema(financialRecords).
   status: true,
   dueDate: true,
   reference: true,
-})
-.extend({
+}).extend({
   relatedEntityId: z.number().optional(),
   relatedEntityType: z.string().optional(),
   taxDeductible: z.boolean().optional(),
@@ -322,8 +386,7 @@ export const insertBudgetSchema = createInsertSchema(budgets).pick({
   departmentId: true,
   projectId: true,
   actualSpend: true,
-})
-.extend({
+}).extend({
   period: z.string().optional(),
   description: z.string().optional(),
   status: z.string().optional(),
@@ -339,8 +402,7 @@ export const insertProjectSchema = createInsertSchema(projects).pick({
   budget: true,
   teamId: true,
   progress: true,
-})
-.extend({
+}).extend({
   priority: z.string().optional(),
   completedAt: z.date().optional(),
 });
@@ -355,11 +417,10 @@ export const insertMeetingSchema = createInsertSchema(meetings).pick({
   projectId: true,
   status: true,
   notes: true,
-})
-.extend({
+}).extend({
   startTime: z.string().optional(),
   endTime: z.string().optional(),
-  location: z.string().optional(), 
+  location: z.string().optional(),
   agenda: z.string().optional(),
   attendees: z.array(z.number()).optional(),
 });
@@ -380,43 +441,3 @@ export const insertTaskSchema = createInsertSchema(tasks).pick({
   progress: true,
   completedDate: true,
 });
-
-// Define types for all schemas
-export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
-
-export type InsertCustomer = z.infer<typeof insertCustomerSchema>;
-export type Customer = typeof customers.$inferSelect;
-
-export type InsertComplaint = z.infer<typeof insertComplaintSchema>;
-export type Complaint = typeof complaints.$inferSelect;
-
-export type InsertDepartment = z.infer<typeof insertDepartmentSchema>;
-export type Department = typeof departments.$inferSelect;
-
-export type InsertEmployee = z.infer<typeof insertEmployeeSchema>;
-export type Employee = typeof employees.$inferSelect;
-
-export type InsertTeam = z.infer<typeof insertTeamSchema>;
-export type Team = typeof teams.$inferSelect;
-
-export type InsertTeamMember = z.infer<typeof insertTeamMemberSchema>;
-export type TeamMember = typeof teamMembers.$inferSelect;
-
-export type InsertProduct = z.infer<typeof insertProductSchema>;
-export type Product = typeof products.$inferSelect;
-
-export type InsertFinancialRecord = z.infer<typeof insertFinancialRecordSchema>;
-export type FinancialRecord = typeof financialRecords.$inferSelect;
-
-export type InsertBudget = z.infer<typeof insertBudgetSchema>;
-export type Budget = typeof budgets.$inferSelect;
-
-export type InsertProject = z.infer<typeof insertProjectSchema>;
-export type Project = typeof projects.$inferSelect;
-
-export type InsertMeeting = z.infer<typeof insertMeetingSchema>;
-export type Meeting = typeof meetings.$inferSelect;
-
-export type InsertTask = z.infer<typeof insertTaskSchema>;
-export type Task = typeof tasks.$inferSelect;

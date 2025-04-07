@@ -1,3 +1,5 @@
+
+// Main application component and routing setup
 import { Switch, Route } from "wouter";
 import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -14,6 +16,7 @@ import OperationsPage from "@/pages/operations-page";
 import MarketplacePage from "@/pages/marketplace-page";
 import SettingsPage from "@/pages/settings-page";
 
+// Router component handling all application routes
 function Router() {
   return (
     <Switch>
@@ -30,6 +33,7 @@ function Router() {
   );
 }
 
+// Root application component with providers
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
